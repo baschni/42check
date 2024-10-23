@@ -39,7 +39,8 @@ Check if it is  in the $PATH variable:
 ```
 echo $PATH
 ```
-If not, you can add `export PATH=/home/<user>/bin` to your `~/.zshrc` (or `~/.bashrc` if you are using bash) or to `~/.profile`, regarding your system/needs. 
+If not, you can add `export PATH=/home/<user>/bin` to your `~/.zshrc` (or `~/.bashrc` if you are using bash) or to `~/.profile`, regarding your system/needs.
+
 ### Add a shortcut for VS Code
 
 Open the file where you can edit the keyboard shortcuts via `File -> Preferences -> Keyboard Shortcuts` and click on the file icon in the upper right corner:
@@ -52,7 +53,7 @@ Add the following code at the top. You can also modify the shortcut to your need
 	"key": "ctrl+n",
 	"command": "workbench.action.terminal.sendSequence",
 	"args": {
-		"text": "cd '${fileDirname}'\n42checker '${fileBasename}'\n"
+		"text": "cd '${fileDirname}'\n42check '${fileBasename}'\n"
 	}
 },
 ```
@@ -64,7 +65,7 @@ If you use VS Code on Windows with WSL (Windows Subsystem for Linux), try this l
 	"key": "ctrl+n",
 	"command": "workbench.action.terminal.sendSequence",
 	"args": {
-		"text": "VSCODE_WD=`sed 's/\\\\\\\\/\\//g' <<< '${fileDirname}' | sed 's/C:/\\/mnt\\/c/g'` cd \"$VSCODE_WD\" && echo \"cd $VSCODE_WD\"\n42checker \"${fileBasename}\"\n"
+		"text": "VSCODE_WD=$(sed 's/\\\\/\\//g' <<< '${fileDirname}' | sed 's/C:/\\/mnt\\/c/g') && cd \"$VSCODE_WD\" && echo \"cd $VSCODE_WD\"\n42check \"${fileBasename}\"\n"
 	}
 },
 ```

@@ -6,9 +6,9 @@ from typing import List
 
 NORMINETTE_EXECUTABLE = "norminette"
 
-ERROR_UNRECOGNIZED_TOKEN = "Error: Unrecognized token line "
+ERROR_UNRECOGNIZED_TOKEN = "Error: Unrecognized token line"
 ERROR_UNRECOGNIZED_LINE = "Error: Unrecognized line ("
-ERROR_STRING_LITERAL_UNTERMINATED = "String literal unterminated detected at line "
+ERROR_STRING_LITERAL_UNTERMINATED = "String literal unterminated detected at line"
 
 ERROR_NESTED_BRACKETS = "Error: Nested parentheses, braces or brackets are not correctly closed"
 ERROR_INVALID_PREPROCESSING_DIRECTIVE = "Invalid preprocessing directive"
@@ -29,7 +29,7 @@ def recursive_c_h_file_search(folder):
 	ls = os.listdir(folder)
 	files = []
 	for file in ls:
-		if os.path.isdir(os.path.join(folder, file)) and not os.path.islink(os.path.join(folder, file)):
+		if os.path.isdir(file) and not os.path.islink(file):
 			files = [*files, *recursive_c_h_file_search(os.path.join(folder, file))]
 		elif(file[-2:] == ".c" or file[-2] == ".h"):
 			file = os.path.join(folder, file)
@@ -57,43 +57,29 @@ def get_errors_from_norminette(files):
 			continue
 		elif line[-8:] == ": Error!":
 			current_file = line[:-8]
-			if not current_file in errors:
-					errors[current_file] = []
 		elif (error := find_from_list(line, ERROR_WITHOUT_LINE_INFO)) != "":
 			key = line[:line.find(error)].replace("Error: ", "").replace("'", "").strip()
 			if key not in errors:
 				errors[key] = list()
+				files.append(key)
 			errors[key].append({"error_code": "", "error_msg": error, \
 								"line": None, "column": None})
 		elif (error := find_from_list(line, ERROR_WITH_LINE_INFO)) != "":
-			line = line.replace("\x1b[0m", "").replace("\x1b[31m", "").strip()
-			line = line[len(error):].split(",", 1)
-			print(line)
+			line = line.replace("\x1b[0m", "").strip()
+			line = line[line.find(error):].split(",", 1)
 			line_number = int(line[0])
 			column_number = None
 			if len(line) == 2:
-				line = line[1].strip()
-				if (bracket := line.find(")")) != -1:
-					line = line[:bracket].strip()
-				if line[:3] == "col":
-					line = line[3:]
+				line = line[1]
+				if (bracket := line.find(")")):
+					line = line[:bracket]
 				column_number = int(line)
-			errors[current_file].append({"error_code": "", "error_msg": error[:-1].strip(), \
-								"line": line_number, "column": column_number})
-		elif (error := find_from_list(line, ERROR_WITH_LINE_INFO_TO_FIND)) != "":
-			if error == ERROR_NESTED_BRACKETS:
-				line_number, column_number = get_line_error_nested_brackets(current_file)
-			elif error == ERROR_EXTRA_TOKEN_ENDIF:
-				line_number, column_number = get_line_extra_token_endif(current_file)
-			elif error == ERROR_INCLUDE_FILE_ARGUMENT:
-				line_number, column_number = get_line_error_include_argument(current_file)
-			elif error == ERROR_INVALID_PREPROCESSING_DIRECTIVE:
-				line_number, column_number = get_line_invalid_pp_directive(current_file)
 			errors[current_file].append({"error_code": "", "error_msg": error, \
-								"line": line_number, "column": column_number})
+								"line": line_number, "column": column_number})	
 		else:
 			if line.find(ERROR_UNRECOGNIZED_TOKEN) != -1:
-
+				if not current_file in errors:
+					errors[current_file] = []
 				line = line.replace("\x1b[0m", "")
 				line = line[line.find("line") + 5:].strip()
 				line_number, col_number = line.split(",")
@@ -104,6 +90,7 @@ def get_errors_from_norminette(files):
 				files.remove(current_file)
 				print(current_file+ ": " + line)
 				continue
+			print(line)
 			front, detail = line.split("):")
 			code, position = front.strip().split("(")
 			code = code[7:]
@@ -142,7 +129,7 @@ def get_line_invalid_pp_directive(path):
 	for index, line in enumerate(file):
 		if line[:1] == "#":
 			if line[1:].strip() not in VALID_PREPROCESSOR_DIRECTIVES:
-				return index + 1, None
+				return index, None
 	return None, None
 
 def get_line_extra_token_endif(path):
@@ -151,7 +138,7 @@ def get_line_extra_token_endif(path):
 	for index, line in enumerate(file):
 		if line[:1] == "#":
 			if line[1:].strip()[:len("endif")] == "endif" and len(line[1:].strip()) > len("endif"):
-				return index + 1, None
+				return index, None
 	return None, None
 
 def get_line_error_include_argument(path):
@@ -161,7 +148,7 @@ def get_line_error_include_argument(path):
 		if line[:1] == "#":
 			if (line:=line[1:].strip()[:len("include")]) == "include":
 				if (line[:1] != '"' and line[:1] != '<') or (line[-1:] != '"' and line[-1:] != '>'):
-					return index + 1, None
+					return index, None
 	return None, None
 
 def get_line_error_nested_brackets(path):
@@ -207,11 +194,11 @@ def get_line_error_nested_brackets(path):
 				else:
 					del round_brackets[-1]
 		if stop:
-			return index + 1, cindex + 1
+			return index, cindex
 		elif round_brackets != []:
-			return index + 1, round_brackets[-1] + 1
+			return index, round_brackets[-1]
 		elif square_brackets != []:
-			return index + 1, square_brackets[-1] + 1
+			return index, square_brackets[-1]
 	return None, None	
 
 if __name__ == "__main__":
