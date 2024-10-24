@@ -1,7 +1,7 @@
 42check
 =======
 
-[42check](http://github.com/baschni/42check) is a python script which parses the output of [norminette](http://github.com/norminette) and formats it to make file links work
+[42check](http://github.com/baschni/42check) is a python script which parses the output of [norminette](https://github.com/42School/norminette) and formats it to make file links work
 
 ## Motivation
 
@@ -29,9 +29,9 @@ ln -s /home/<user>/programs/42check/42check.py ./42check
 chmod 0100 ./42check
 ```
 
-You can now execute `42check` in your shell. If not, or if the directory `/home/<user>/bin` should not exist, see the [section below](#user_bin).
+You can now execute `42check` in your shell. If not, or if the directory `/home/<user>/bin` should not exist, see the section below.
 
-### Put ~/bin to $PATH {user_bin}
+### Put ~/bin to $PATH
 
 If there is no folder `/home/<user>/bin` create it:
 ```
@@ -74,4 +74,4 @@ If you use VS Code on Windows with WSL (Windows Subsystem for Linux), try this l
 
 ## See also
 
-If you like [42check](http://github.com/baschni/42check), you might also like [21norm](http://github.com/baschni/21norm), which will correct many of the norm errors detected by [norminette](http://github.com/norminette) automatically.
+If you like [42check](http://github.com/baschni/42check), you might also like [21norm](http://github.com/baschni/21norm), which will correct many of the norm errors detected by [norminette](https://github.com/42School/norminette) automatically.
