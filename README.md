@@ -21,7 +21,7 @@ norminette must be installed and in the path.
 
 ### Download
 
-Download the file [42check.py](http://github.com/baschni/42check/42check.py) and save it to a folder, e.g. `/home/<user>/programs/42check`. Goto `/home/<user>/bin`, create a  symbolic link to the downloaded file and make it executable:
+Download the file [42check.py](https://github.com/baschni/42check/blob/main/42check.py) and save it to a folder, e.g. `/home/<user>/programs/42check`. Goto `/home/<user>/bin`, create a  symbolic link to the downloaded file and make it executable:
 
 ```
 cd /home/<user>/bin
@@ -29,7 +29,7 @@ ln -s /home/<user>/programs/42check/42check.py ./42check
 chmod 0100 ./42check
 ```
 
-You can now execute `42check` in your shell. If not, or if the directory `/home/<user>/bin` should not exist, see the [section below](#custom_bin).
+You can now execute `42check` in your shell. If not, or if the directory `/home/<user>/bin` should not exist, see the [section below](#user_bin).
 
 ### Put ~/bin to $PATH {user_bin}
 
