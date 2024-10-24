@@ -21,7 +21,7 @@ norminette must be installed and in the path.
 
 ### Download
 
-Download the file [42check.py](http://github.com/baschni/42check) and save it to a folder, e.g. `/home/<user>/programs/42check`. Goto `/home/<user>/bin`, create a  symbolic link to the downloaded file and make it executable:
+Download the file [42check.py](http://github.com/baschni/42check/42check.py) and save it to a folder, e.g. `/home/<user>/programs/42check`. Goto `/home/<user>/bin`, create a  symbolic link to the downloaded file and make it executable:
 
 ```
 cd /home/<user>/bin
