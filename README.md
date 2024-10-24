@@ -1,7 +1,7 @@
 42check
 =======
 
-[42check](http://github.com/baschnit/42check) is a python script which parses the output of [norminette](http://github.com/norminette) and formats it to make file links work
+[42check](http://github.com/baschni/42check) is a python script which parses the output of [norminette](https://github.com/42School/norminette) and formats it to make file links work
 
 ## Motivation
 
@@ -21,7 +21,7 @@ norminette must be installed and in the path.
 
 ### Download
 
-Download the file [42check.py](http://github.com/baschnit/42check) and save it to a folder, e.g. `/home/<user>/programs/42check`. Goto `/home/<user>/bin`, create a  symbolic link to the downloaded file and make it executable:
+Download the file [42check.py](http://github.com/baschni/42check) and save it to a folder, e.g. `/home/<user>/programs/42check`. Goto `/home/<user>/bin`, create a  symbolic link to the downloaded file and make it executable:
 
 ```
 cd /home/<user>/bin
@@ -74,4 +74,4 @@ If you use VS Code on Windows with WSL (Windows Subsystem for Linux), try this l
 
 ## See also
 
-If you like [42check](http://github.com/baschnit/42check), you might also like [21norm](http://github.com/baschnit/21norm), which will correct many of the norm errors detected by [norminette](http://github.com/norminette) automatically.
+If you like [42check](http://github.com/baschni/42check), you might also like [21norm](http://github.com/baschni/21norm), which will correct many of the norm errors detected by [norminette](https://github.com/42School/norminette) automatically.
