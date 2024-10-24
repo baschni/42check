@@ -7,6 +7,8 @@
 
 For programming I use VS Code with its integrated terminal where I launch norminette. In its output, the file name along with line and column numbers are not recognized by VS Code. 42check reformats this information: while holding `CTRL`, I can click on the filename and VS Code automatically takes me to the line of the norm error.
 
+![Screenshot of Output](README/Screenshot_Output_42check.png)
+
 ## Usage
 
 Type `42check` to check the norm of all *.c and *.h files in the current directory. Type `42check specific_folder/specific_file.c` to check the norm just of that file.
