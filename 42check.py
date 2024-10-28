@@ -4,6 +4,7 @@ import os
 from subprocess import check_output, CalledProcessError
 from typing import List
 
+TMP_FILE_NAME = "21norm"
 NORMINETTE_EXECUTABLE = "norminette"
 
 ERROR_UNRECOGNIZED_TOKEN = "Error: Unrecognized token line "
@@ -15,12 +16,13 @@ ERROR_INVALID_PREPROCESSING_DIRECTIVE = "Invalid preprocessing directive"
 ERROR_EXTRA_TOKEN_ENDIF = "Extra tokens at end of #endif directive"
 ERROR_INCLUDE_FILE_ARGUMENT = "Invalid file argument for #include directive"
 
+ERROR_INVALID_MACRO = "Invalid macro function definition"
 ERROR_NO_SUCH_FILE = "no such file or directory"
 ERROR_NO_VALID_C_FILE = "is not valid C or C header file"
 
 ERROR_WITH_LINE_INFO = [ERROR_UNRECOGNIZED_LINE, ERROR_UNRECOGNIZED_TOKEN, ERROR_STRING_LITERAL_UNTERMINATED]
 ERROR_WITH_LINE_INFO_TO_FIND = [ERROR_NESTED_BRACKETS, ERROR_EXTRA_TOKEN_ENDIF, ERROR_INVALID_PREPROCESSING_DIRECTIVE, ERROR_INCLUDE_FILE_ARGUMENT]
-ERROR_WITHOUT_LINE_INFO = [ERROR_NO_VALID_C_FILE, ERROR_NO_SUCH_FILE]
+ERROR_WITHOUT_LINE_INFO = [ERROR_INVALID_MACRO, ERROR_NO_VALID_C_FILE, ERROR_NO_SUCH_FILE]
 
 VALID_PREPROCESSOR_DIRECTIVES = ["ifndef", "endif", "define", "include"]
 
@@ -29,9 +31,11 @@ def recursive_c_h_file_search(folder):
 	ls = os.listdir(folder)
 	files = []
 	for file in ls:
+		if file[:len("." + TMP_FILE_NAME + ".tmp")] == "." + TMP_FILE_NAME + ".tmp":
+			continue
 		if os.path.isdir(os.path.join(folder, file)) and not os.path.islink(os.path.join(folder, file)):
 			files = [*files, *recursive_c_h_file_search(os.path.join(folder, file))]
-		elif(file[-2:] == ".c" or file[-2] == ".h"):
+		elif(file[-2:] == ".c" or file[-2:] == ".h"):
 			file = os.path.join(folder, file)
 			if file[:2] == "./":
 				file = file[2:]
