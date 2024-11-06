@@ -44,7 +44,7 @@ def recursive_c_h_file_search(folder):
 
 def find_from_list(line: str, needles: List[str]):
 	for needle in needles:
-		if (res := line.find(needle)) != -1:
+		if (line.find(needle)) != -1:
 			return needle
 	return ""
 
@@ -57,19 +57,24 @@ def get_errors_from_norminette(files):
 	output = output.decode("utf-8").split("\n")
 	current_file = None
 	for line in output:
+		error1 = find_from_list(line, ERROR_WITHOUT_LINE_INFO)
+		error2 = find_from_list(line, ERROR_WITH_LINE_INFO)
+		error3 = find_from_list(line, ERROR_WITH_LINE_INFO_TO_FIND)
 		if line[-5:] == ": OK!" or line == "":
 			continue
 		elif line[-8:] == ": Error!":
 			current_file = line[:-8]
 			if not current_file in errors:
 					errors[current_file] = []
-		elif (error := find_from_list(line, ERROR_WITHOUT_LINE_INFO)) != "":
+		elif (error1) != "":
+			error = error1
 			key = line[:line.find(error)].replace("Error: ", "").replace("'", "").strip()
 			if key not in errors:
 				errors[key] = list()
 			errors[key].append({"error_code": "", "error_msg": error, \
 								"line": None, "column": None})
-		elif (error := find_from_list(line, ERROR_WITH_LINE_INFO)) != "":
+		elif (error2) != "":
+			error = error2
 			line = line.replace("\x1b[0m", "").replace("\x1b[31m", "").strip()
 			line = line[len(error):].split(",", 1)
 			print(line)
@@ -77,14 +82,16 @@ def get_errors_from_norminette(files):
 			column_number = None
 			if len(line) == 2:
 				line = line[1].strip()
-				if (bracket := line.find(")")) != -1:
+				bracket = line.find(")")
+				if (bracket) != -1:
 					line = line[:bracket].strip()
 				if line[:3] == "col":
 					line = line[3:]
 				column_number = int(line)
 			errors[current_file].append({"error_code": "", "error_msg": error[:-1].strip(), \
 								"line": line_number, "column": column_number})
-		elif (error := find_from_list(line, ERROR_WITH_LINE_INFO_TO_FIND)) != "":
+		elif (error3) != "":
+			error = error3
 			if error == ERROR_NESTED_BRACKETS:
 				line_number, column_number = get_line_error_nested_brackets(current_file)
 			elif error == ERROR_EXTRA_TOKEN_ENDIF:
@@ -163,7 +170,8 @@ def get_line_error_include_argument(path):
 		file = f.read().split("\n")
 	for index, line in enumerate(file):
 		if line[:1] == "#":
-			if (line:=line[1:].strip()[:len("include")]) == "include":
+			line = line[1:].strip()[:len("include")]
+			if (line) == "include":
 				if (line[:1] != '"' and line[:1] != '<') or (line[-1:] != '"' and line[-1:] != '>'):
 					return index + 1, None
 	return None, None
